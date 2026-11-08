@@ -7,56 +7,64 @@ import e from "./assets/e.jpg";
 import f from "./assets/f.jpg";
 import g from "./assets/g.jpg";
 import h from "./assets/h.jpg";
+import tea from "./assets/tea.jpg";
+import image2 from "./assets/image2.jpg";
+import keza from "./assets/keza.jpg";
+import erneste from "./assets/erneste.jpg";
 
-/* Images live in  src/assets/  (a.jpg ... h.jpg) and are imported above */
+/* Images live in  src/assets/  (a.jpg ... h.jpg, tea.jpg, image2.jpg, keza.jpg, erneste.jpg) and are imported above */
 
-/* ---------- Black background, orange-red text, many-colour curves ---------- */
-const BG = "#0A0A10";      // slide background (black)
-const DEEP = "#000000";    // darkest edge of the start screen
-const HOT = "#FF4500";     // orange-red
-const GOLD = "#FF5A1F";    // orange-red for titles, bars and accents
-const SOFT = "#FFB27A";    // soft orange for sub-titles
-const CREAM = "#FFF1E6";   // light details
-const INK = "#000000";
-const RIB = ["#FF4500", "#FFB020", "#FF2E93", "#8B5CF6", "#22D3EE"]; // curve colours
+/* ---------- Blue slides with white and light-blue curves, Rwanda yellow and green accents ---------- */
+const BG = "rgb(10, 76, 186)";       // slide blue
+const DEEP = "rgb(4, 36, 110)";      // darkest blue (start screen edge)
+const PANEL = "linear-gradient(135deg, rgb(7, 58, 164) 0%, rgb(14, 104, 214) 100%)";
+const BLUE = "rgb(125, 200, 255)";   // light blue for curves and bars
+const GOLD = "rgb(250, 210, 1)";     // Rwanda yellow: titles and accents
+const GREEN = "rgb(25, 210, 107)";   // green
+const HOT = "rgb(255, 90, 31)";      // orange-red details
+const SOFT = "rgb(220, 238, 255)";   // pale blue for sub-titles
+const CREAM = "rgb(255, 255, 255)";  // white
 
 const avatar = (c1, c2) => "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs><rect width='200' height='200' fill='url(#g)'/><circle cx='100' cy='78' r='38' fill='#fff' fill-opacity='.92'/><path d='M28 200c0-46 32-74 72-74s72 28 72 74z' fill='#fff' fill-opacity='.92'/></svg>`);
-const PICS = [a, b, c, d, e, f, g, h];
+const PICS = [a, b, c, d, e, f, g, h, tea, image2, keza, erneste];
 
 const uid = () => Math.random().toString(36).slice(2, 9);
 const txt = (text, x, y, w, o = {}) => ({ id: uid(), type: "text", text, x, y, w, font: "Nunito Sans", size: 28, color: "#ffffff", weight: 400, italic: false, align: "left", ...o });
 const img = (src, x, y, w, h, o = {}) => ({ id: uid(), type: "image", src, x, y, w, h, fit: "cover", circle: false, ...o });
-const box = (x, y, w, h, color) => ({ id: uid(), type: "shape", x, y, w, h, color });
+const box = (x, y, w, h, color, o = {}) => ({ id: uid(), type: "shape", x, y, w, h, color, ...o });
+const bar = (x, y, w) => { const t = w / 3; return [box(x, y, t, 8, BLUE), box(x + t, y, t, 8, GOLD), box(x + 2 * t, y, t, 8, GREEN)]; };
 
 const topic = (title, para, cap, pic, flip) => {
   const x = flip ? 650 : 70;
   return {
     id: uid(), bg: { color: BG, img: pic, dim: 1, flip },
     els: [
-      box(x, 70, 90, 8, GOLD),
+      ...bar(x, 70, 90),
       txt(title, x, 92, 560, { font: "Outfit", size: 36, weight: 800, color: GOLD }),
-      txt(para, x, 268, 560, { size: 19 }),
-      txt("Image: " + cap, flip ? 70 : 700, 655, 510, { size: 14, italic: true, color: "#ffffff", align: flip ? "left" : "right" }),
+      txt(para, x, 268, 560, { size: 20, lh: 1.5, color: "#EAF2F8" }),
+      txt("Image: " + cap, flip ? 70 : 700, 640, 510, { size: 14, italic: true, color: "#ffffff", align: flip ? "left" : "right" }),
     ],
   };
 };
 
 const refsSlide = (n, text) => ({ id: uid(), bg: { color: BG, img: "", dim: 0 }, els: [
-  box(70, 60, 90, 8, GOLD),
+  ...bar(70, 60, 90),
   txt("References (" + n + " of 4)", 70, 82, 900, { font: "Outfit", size: 40, weight: 800, color: GOLD }),
   txt(text, 70, 150, 1140, { size: 17 }),
 ] });
 
-const members = [["Keza Nadia", "KN", "#FF4500", "#FFB020"], ["Tuyishime Esther", "TE", "#FF2E93", "#8B5CF6"], ["Itangishaka Erneste", "IE", "#22D3EE", "#8B5CF6"], ["Mutabazi Queen Peace", "MQ", "#FFB020", "#FF2E93"], ["Umumararungu Sandrine Joana", "US", "#FF4500", "#FF2E93"]];
+const members = [["Keza Nadia", "KN", "#00A1DE", "#19D26B"], ["Tuyishime Esther", "TE", "#FAD201", "#FF5A1F"], ["Itangishaka Erneste", "IE", "#19D26B", "#00A1DE"], ["Mutabazi Queen Peace", "MQ", "#FF5A1F", "#FAD201"], ["Umumararungu Sandrine Joana", "US", "#00A1DE", "#FAD201"]];
+
+const PHOTO = { KN: keza, IE: erneste }; // members with a real photo
 
 const SLIDES = [
-  { id: uid(), bg: { color: BG, img: a, dim: 0.88, full: true }, els: [
-    box(520, 128, 240, 8, GOLD),
+  { id: uid(), bg: { color: BG, img: a, dim: 0.5, full: true }, els: [
+    ...bar(520, 128, 240),
     txt("Globalization and Global Citizenship", 90, 40, 1100, { font: "Outfit", size: 56, weight: 800, align: "center", color: GOLD }),
     txt("Group 6 · MSII · S5 · English", 90, 168, 1100, { size: 28, align: "center", color: SOFT }),
     ...members.flatMap(([n, ini, c1, c2], i) => {
       const x = 59 + i * 238;
-      return [img(avatar(c1, c2), x + 30, 270, 150, 150, { circle: true, label: ini }),
+      return [img(PHOTO[ini] ?? avatar(c1, c2), x + 30, 270, 150, 150, { circle: true, label: ini, pos: "50% 22%" }),
         txt(n, x, 440, 210, { font: "Outfit", size: 22, weight: 700, align: "center" })];
     }),
   ] },
@@ -67,14 +75,14 @@ const SLIDES = [
     "Connections also come through tourism and sport. Rwanda welcomed 1.49 million visitors in 2025, up from 1.36 million in 2024, and tourism earned about US$685 million (New Times, 2026a). Big events such as the 2025 UCI Road World Championships and the FIFA Series in Kigali show Rwanda to audiences far away (KT Press, 2026). For us at ASYV, globalization is not far away. It is in the songs we stream, the phones we use and the visitors we meet around Rwamagana.",
     "Kigali Convention Centre at night.", a, true),
   topic("How Rwanda takes part in global trade",
-    "Trade means buying and selling goods and services across borders. Rwanda mainly sells coffee, tea and minerals, together with horticultural products such as avocados, passion fruit, flowers and vegetables. Some farm goods are processed first, for example honey, canned tomatoes, French beans and macadamia nuts (U.S. International Trade Administration [ITA], n.d.). The picture shows fresh produce and the flag of Kenya, one of our East African neighbours. Selling to many countries helps farmers earn money and lets Rwanda buy what it cannot produce itself.",
-    "Fresh produce and the Kenyan flag: a regional trade partner.", c),
+    "Trade means buying and selling goods and services across borders. Rwanda mainly sells coffee, tea and minerals, together with horticultural products such as avocados, passion fruit, flowers and vegetables. Some farm goods are processed first, for example honey, canned tomatoes, French beans and macadamia nuts (U.S. International Trade Administration [ITA], n.d.). Selling to many countries helps farmers earn money and lets Rwanda buy what it cannot produce itself.",
+    "Rwanda taking part in global trade.", image2),
   topic("New trading partners in Africa and Asia",
     "Rwanda’s trading partners are changing. Exports to China almost doubled, from US$83.7 million in 2024 to US$160.8 million in 2025 (New Times, 2026c). Closer to home, exports to the East African Community rose to about US$54.6 million in the last quarter of 2025, nearly twice the figure of a year earlier (Kamanzi, 2026). Trade with neighbours is steady because it is based on daily needs. One challenge remains: Rwanda sells mostly raw products with little added value, so it earns less than it could (United Nations Development Programme [UNDP], 2026b).",
     "Fresh produce and the Kenyan flag: a regional trade partner.", c, true),
   topic("Coffee and tea: income from the farm",
-    "Agriculture is a major source of foreign income. In 2025 Rwanda’s coffee sector had its best harvest in six years: exports reached 23,860 tonnes of green coffee and earned more than US$148.6 million (AllAfrica, 2026). The national accounts show that export crops grew by 32 per cent in 2025, with coffee up 60 per cent and tea up 8 per cent (National Institute of Statistics of Rwanda [NISR], 2026). Tea, like the leaves in this picture, is sold through an auction system, so the money can arrive in a later quarter (AllAfrica, 2026).",
-    "Freshly picked tea leaves.", b),
+    "Agriculture is a major source of foreign income. In 2025 Rwanda’s coffee sector had its best harvest in six years: exports reached 23,860 tonnes of green coffee and earned more than US$148.6 million (AllAfrica, 2026). The national accounts show that export crops grew by 32 per cent in 2025, with coffee up 60 per cent and tea up 8 per cent (National Institute of Statistics of Rwanda [NISR], 2026). Tea is sold through an auction system, so the money can arrive in a later quarter (AllAfrica, 2026).",
+    "Tea, one of Rwanda’s main export crops.", tea),
   topic("Tourism, events and the trade gap",
     "Services also earn foreign money. Tourism brought in US$685 million in 2025, and meetings and conferences alone earned US$94.7 million (New Times, 2026a, 2026b). Between November 2025 and January 2026, visitors spent about US$161.5 million, most of it by people arriving by air (Radar Africa, 2026). Still, Rwanda buys more than it sells. In the last quarter of 2025, imports were about US$1.54 billion, while domestic exports were about US$375 million (UNDP, 2026a). Adding value, such as roasting coffee at home, can narrow the gap.",
     "Freshly picked tea leaves.", b, true),
@@ -139,10 +147,19 @@ const SLIDES = [
     "UNESCO. (n.d.). Kinyarwanda in Rwanda. World Atlas of Languages. https://en.wal.unesco.org/countries/rwanda/languages/kinyarwanda-2",
     "U.S. International Trade Administration. (n.d.). Rwanda agriculture sector. https://trade.gov/country-commercial-guides/rwanda-agriculture-sector",
   ].join("\n\n")),
-  { id: uid(), bg: { color: BG, img: a, dim: 0.72, full: true }, els: [
-    txt("Thank you!", 90, 220, 1100, { font: "Outfit", size: 130, weight: 800, align: "center", color: GOLD }),
-    box(540, 400, 200, 8, GOLD),
-    txt("Congratulations to all of us · Group 6 · Questions are welcome", 90, 440, 1100, { size: 30, align: "center" }),
+  { id: uid(), bg: { color: BG, img: a, dim: 0.5, full: true }, els: [
+    txt("Thank you!", 90, 28, 1100, { font: "Outfit", size: 84, weight: 800, align: "center", color: GOLD }),
+    ...bar(540, 138, 200),
+    txt("Thank you for your attention. If you have any questions, please consult us.", 190, 164, 900, { size: 28, align: "center" }),
+    txt("Group 6 · MSII · S5 · English", 90, 222, 1100, { size: 20, align: "center", color: SOFT }),
+    ...members.flatMap(([n, ini, c1, c2], i) => {
+      const x = 59 + i * 238;
+      return [
+        box(x, 290, 210, 285, "rgba(255,255,255,.16)", { radius: 16, border: "2px solid rgba(255,255,255,.5)" }),
+        img(PHOTO[ini] ?? avatar(c1, c2), x + 30, 312, 150, 150, { circle: true, label: ini, pos: "50% 22%" }),
+        txt(n, x + 10, 482, 190, { font: "Outfit", size: 20, weight: 700, align: "center" }),
+      ];
+    }),
   ] },
 ];
 
@@ -159,13 +176,15 @@ const CSS = `
   @keyframes bubble{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-480px);opacity:0}}
   @keyframes wave{to{transform:translateX(-90px)}}
   @keyframes wave2{from{transform:translateX(-90px)}to{transform:translateX(0)}}
-  @keyframes glow{50%{box-shadow:0 0 22px 4px rgba(255,90,31,.85)}}
+  @keyframes glow{50%{box-shadow:0 0 22px 4px rgba(25,210,107,.8)}}
   @keyframes reveal{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0)}}
   @keyframes revealL{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
   @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes bounce{0%,100%{transform:translateY(0);animation-timing-function:cubic-bezier(.3,0,.6,1)}50%{transform:translateY(-22px);animation-timing-function:cubic-bezier(.4,0,.7,1)}}
+  @keyframes groundShadow{0%,100%{transform:scaleX(1);opacity:.35}50%{transform:scaleX(.7);opacity:.18}}
   @keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
   @keyframes numIn{from{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1.15)}to{opacity:1;transform:scale(1)}}
-  @keyframes ringDown{from{stroke-dashoffset:0}to{stroke-dashoffset:603}}
+  @keyframes ringDown{from{stroke-dashoffset:0}to{stroke-dashoffset:881}}
   @keyframes ringPop{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
@@ -201,16 +220,16 @@ function Stage({ color, children }) {
 function Elem({ el, i }) {
   const base = {
     position: "absolute", left: el.x, top: el.y, width: el.w, height: el.type === "text" ? "auto" : el.h,
-    animation: el.type === "shape" ? `grow .8s ${0.1 + i * 0.12}s ease-out both, glow 2.6s ${1 + i * 0.1}s ease-in-out infinite` : el.type === "text" ? "none" : `up .7s ${0.1 + i * 0.12}s ease-out both`,
+    animation: el.type === "shape" ? `grow .8s ${0.1 + Math.min(i, 8) * 0.12}s ease-out both` : el.type === "text" ? "none" : `up .7s ${0.1 + Math.min(i, 8) * 0.12}s ease-out both`,
     transformOrigin: "left center",
   };
-  if (el.type === "shape") return <div style={{ ...base, background: el.color, borderRadius: 6 }} />;
+  if (el.type === "shape") return <div style={{ ...base, background: el.color, borderRadius: el.radius ?? 6, border: el.border, boxSizing: "border-box" }} />;
 
   if (el.type === "image") return (
     <div style={base}>
-      <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: el.circle ? "50%" : 14, background: "#1A1A24", border: el.circle ? `5px solid ${GOLD}` : "none", boxSizing: "border-box", animation: el.circle ? `float 4s ${i * 0.4}s ease-in-out infinite` : "none" }}>
+      <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: el.circle ? "50%" : 14, background: "#10202E", border: el.circle ? `5px solid ${CREAM}` : "none", boxSizing: "border-box", animation: el.circle ? `float 4s ${i * 0.4}s ease-in-out infinite` : "none" }}>
         {el.src
-          ? <img src={el.src} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: el.fit }} />
+          ? <img src={el.src} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: el.fit, objectPosition: el.pos ?? "center" }} />
           : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: CREAM, fontFamily: "Outfit", fontWeight: 800, fontSize: Math.min(el.w, el.h) / 3 }}>{el.label || "Image"}</div>}
       </div>
     </div>
@@ -218,9 +237,9 @@ function Elem({ el, i }) {
 
   return (
     <div style={base}>
-      <div style={{ fontFamily: `'${el.font}', sans-serif`, fontSize: el.size, color: el.color, fontWeight: el.weight, fontStyle: el.italic ? "italic" : "normal", textAlign: el.align, lineHeight: 1.4, textShadow: el.shadow === false ? "none" : "0 1px 8px rgba(0,0,0,.7)", whiteSpace: "pre-wrap", padding: 2 }}>
+      <div style={{ fontFamily: `'${el.font}', sans-serif`, fontSize: el.size, color: el.color, fontWeight: el.weight, fontStyle: el.italic ? "italic" : "normal", textAlign: el.align, lineHeight: el.lh ?? 1.4, textShadow: el.shadow === false ? "none" : "0 1px 8px rgba(0,0,0,.7)", whiteSpace: "pre-wrap", padding: 2 }}>
         {el.text.split("\n").map((l, j) => (
-          <div key={j} style={{ animation: `up .6s ${0.3 + i * 0.12 + j * 0.2}s ease-out both` }}>
+          <div key={j} style={{ animation: `up .6s ${0.3 + Math.min(i, 8) * 0.12 + j * 0.2}s ease-out both` }}>
             {l.length > 140
               ? l.split(/(?<=\.)\s/).map((q, n) => <span key={n} style={{ animation: `fade .8s ${0.6 + n * 0.7}s ease-out both` }}>{q} </span>)
               : l || "\u00A0"}
@@ -231,66 +250,71 @@ function Elem({ el, i }) {
   );
 }
 
-/* ---------- Black background with flowing multi-colour curves ---------- */
-const BUBBLES = [[90, 600, 16, 8], [260, 640, 9, 11], [430, 620, 13, 9], [60, 330, 8, 12], [520, 470, 11, 10], [200, 220, 15, 13], [380, 120, 9, 14]];
-const WAVES = [
-  ["#8B5CF6", 0.75, 688, "wave 8s ease-in-out infinite alternate"],
-  ["#FF2E93", 0.85, 697, "wave2 7s ease-in-out infinite alternate"],
-  ["#FF4500", 0.95, 705, "wave 6s ease-in-out infinite alternate"],
-  ["#FFB020", 1, 713, "wave2 9s ease-in-out infinite alternate"],
-];
-function Deco({ b }) {
-  const split = b.img && !b.full;
-  const cx = split ? 0 : 1280;
+/* ---------- Curves: white and light blue, always parallel and evenly spaced ---------- */
+function Deco({ split, flip }) {
   return (
-    <svg width="1280" height="720" viewBox="0 0 1280 720" style={{ position: "absolute", inset: 0, pointerEvents: "none", transform: b.flip ? "scaleX(-1)" : "none" }}>
-      {/* black panel with a ribbon of colours along its curved edge */}
-      {split && (<>
-        <path d="M0 0 H690 C610 200 780 520 650 720 H0 Z" fill={b.color} />
-        {RIB.map((col, i) => (
-          <path key={col} d={`M${700 + i * 15} 0 C${620 + i * 15} 200 ${790 + i * 15} 520 ${660 + i * 15} 720`} fill="none" stroke={col} strokeWidth={i === 0 ? 9 : 5} strokeLinecap="round" style={{ strokeDasharray: 1200, animation: `draw ${1.6 + i * 0.35}s ${i * 0.15}s ease-out both` }} />
-        ))}
-      </>)}
+    <svg width="1280" height="720" viewBox="0 0 1280 720" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      {/* picture slides: the curved edge of the photo, a white line with a light-blue line beside it */}
+      {split && (flip ? (<>
+        <path d="M600 720 C660 480 540 240 600 0" fill="none" stroke="#fff" strokeWidth="8" strokeLinecap="round" style={{ strokeDasharray: 1200, animation: "draw 1.6s ease-out both" }} />
+        <path d="M584 720 C644 480 524 240 584 0" fill="none" stroke={BLUE} strokeWidth="4" strokeLinecap="round" style={{ strokeDasharray: 1200, animation: "draw 2s .2s ease-out both" }} />
+      </>) : (<>
+        <path d="M680 720 C620 480 740 240 680 0" fill="none" stroke="#fff" strokeWidth="8" strokeLinecap="round" style={{ strokeDasharray: 1200, animation: "draw 1.6s ease-out both" }} />
+        <path d="M696 720 C636 480 756 240 696 0" fill="none" stroke={BLUE} strokeWidth="4" strokeLinecap="round" style={{ strokeDasharray: 1200, animation: "draw 2s .2s ease-out both" }} />
+      </>))}
 
-      {/* soft coloured glows in the corners */}
-      <g style={{ animation: "drift 9s ease-in-out infinite alternate" }}>
-        <circle cx={cx} cy="0" r="250" fill="#FF4500" fillOpacity=".16" />
-        <circle cx={cx} cy="0" r="165" fill="none" stroke="#FF2E93" strokeOpacity=".6" strokeWidth="3" />
-        <circle cx={cx} cy="0" r="205" fill="none" stroke="#FFB020" strokeOpacity=".4" strokeWidth="2" />
-        <circle cx="0" cy="720" r="130" fill="#8B5CF6" fillOpacity=".28" />
-        <circle cx="0" cy="720" r="190" fill="none" stroke="#22D3EE" strokeOpacity=".4" strokeWidth="2" />
-      </g>
-
-      {/* rising bubbles in the curve colours */}
-      {BUBBLES.map(([x, y, r, d], i) => (
-        <circle key={i} cx={x} cy={y} r={r} fill={RIB[i % RIB.length]} fillOpacity=".4" style={{ animation: `bubble ${d}s ${i * 0.8}s ease-in infinite` }} />
-      ))}
-
-      {/* four layered waves along the bottom */}
-      {WAVES.map(([col, op, y, anim]) => (
-        <g key={col} style={{ animation: anim }}>
-          <path d={`M-100 ${y} C100 ${y - 20} 300 ${y + 16} 500 ${y} S900 ${y - 20} 1100 ${y} S1300 ${y + 16} 1400 ${y} V740 H-100Z`} fill={col} fillOpacity={op} />
+      {/* other slides: two soft arcs in the top corner */}
+      {!split && (
+        <g style={{ animation: "fade 1.2s .3s both" }}>
+          <circle cx="1280" cy="0" r="170" fill="#fff" fillOpacity=".08" />
+          <circle cx="1280" cy="0" r="130" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="3" />
         </g>
-      ))}
+      )}
+
+      {/* footer: a light-blue wave behind a white wave, moving together so they stay parallel */}
+      <g style={{ animation: "wave 12s ease-in-out infinite alternate" }}>
+        <path d="M-100 692 C100 676 300 708 500 692 S900 676 1100 692 S1300 708 1400 692 V740 H-100Z" fill={BLUE} fillOpacity=".55" />
+        <path d="M-100 706 C100 690 300 722 500 706 S900 690 1100 706 S1300 722 1400 706 V740 H-100Z" fill="#fff" />
+      </g>
     </svg>
   );
 }
 
 /* ---------- One slide ---------- */
-function SlideView({ slide }) {
+const CLIP = "path('M100 0 H700 V720 H100 C40 480 160 240 100 0 Z')";
+const CLIP_FLIP = "path('M0 0 H600 C540 240 660 480 600 720 H0 Z')";
+
+function SlideView({ slide, index = 0, total = 1 }) {
   const b = slide.bg;
+  const split = b.img && !b.full;
   return (
-    <div style={{ width: 1280, height: 720, position: "relative", overflow: "hidden", background: b.color }}>
-      {b.img && <img src={b.img} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transformOrigin: b.flip ? "20% 50%" : "80% 50%", animation: `${b.flip ? "revealL" : "reveal"} 1.4s ease-out both, kb 18s ease-out both` }} />}
-      {b.img && b.full && <div style={{ position: "absolute", inset: 0, opacity: b.dim, background: b.color }} />}
-      <Deco b={b} />
+    <div style={{ width: 1280, height: 720, position: "relative", overflow: "hidden", background: b.full ? b.color : PANEL }}>
+      {/* picture slides: the whole picture is shown, over a blurred copy of itself that fills the curved panel */}
+      {split && (
+        <div style={{ position: "absolute", top: 0, left: b.flip ? 0 : 580, width: 700, height: 720, clipPath: b.flip ? CLIP_FLIP : CLIP, animation: "fade 1s both" }}>
+          <img src={b.img} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "blur(22px) brightness(.8) saturate(1.1)", transform: "scale(1.2)" }} />
+          <div style={{ position: "absolute", top: 40, bottom: 100, left: b.flip ? 30 : 150, right: b.flip ? 160 : 40, animation: "up .8s .2s ease-out both" }}>
+            <img src={b.img} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "contain", filter: "drop-shadow(0 10px 26px rgba(0,0,0,.45))" }} />
+          </div>
+        </div>
+      )}
+      {/* title and closing slides: the full photo with a light blue tint so the text stays readable */}
+      {b.img && b.full && (<>
+        <img src={b.img} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", animation: "kb 18s ease-out both" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,45,130,.7) 0%, rgba(5,45,130,.3) 45%, rgba(5,45,130,.7) 100%)" }} />
+      </>)}
+      <Deco split={split} flip={b.flip} />
       {slide.els.map((el, i) => <Elem key={el.id} el={el} i={i} />)}
+      {index > 0 && index < total - 1 && (<>
+        <div style={{ position: "absolute", left: 70, bottom: 30, fontFamily: "'Nunito Sans', sans-serif", fontSize: 13, color: "rgba(255,255,255,.85)", textShadow: "0 1px 4px rgba(0,0,0,.6)" }}>Globalization and Global Citizenship</div>
+        <div style={{ position: "absolute", right: 70, bottom: 30, fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: 14, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,.6)" }}>{String(index + 1).padStart(2, "0")} / {total}</div>
+      </>)}
     </div>
   );
 }
 
-/* ---------- Intro: loading ring, press Enter, 2-1 countdown ---------- */
-const R = 96, CIRC = 2 * Math.PI * R; // ≈ 603
+/* ---------- Start screen: big loading ring, "Start presentation", 2-1 countdown ---------- */
+const R = 140, CIRC = 2 * Math.PI * R; // ≈ 880
 
 function Intro({ onStart }) {
   const [phase, setPhase] = useState("loading"); // loading | ready | count
@@ -328,62 +352,68 @@ function Intro({ onStart }) {
 
   const offset = phase === "loading" ? CIRC * (1 - p / 100) : 0;
   const caption = phase === "loading" ? "Loading your slides…" : phase === "ready" ? "Press Enter to start the presentation" : n === 2 ? "Get ready…" : "Here we go!";
+  const ringBox = "min(340px, 38vh)";
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden text-center" style={{ background: `radial-gradient(circle at 50% 40%, #2A0F0A 0%, ${BG} 55%, ${DEEP} 100%)`, fontFamily: "'Nunito Sans', sans-serif", color: "#fff" }}>
+    <div className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden text-center" style={{ background: `radial-gradient(circle at 50% 40%, rgb(40, 130, 235) 0%, ${BG} 60%, ${DEEP} 100%)`, fontFamily: "'Nunito Sans', sans-serif", color: "#fff" }}>
       <style>{CSS}</style>
-
-      {/* flowing coloured curves */}
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" style={{ pointerEvents: "none" }}>
-        {RIB.map((col, i) => (
-          <path key={"t" + col} d={`M-40 ${90 + i * 16} C300 ${-60 + i * 10} 640 ${260 + i * 14} 1320 ${40 + i * 18}`} fill="none" stroke={col} strokeOpacity=".75" strokeWidth={i === 0 ? 6 : 3} strokeLinecap="round" style={{ strokeDasharray: 1600, animation: `draw ${2 + i * 0.3}s ${i * 0.15}s ease-out both` }} />
-        ))}
-        {RIB.map((col, i) => (
-          <path key={"b" + col} d={`M-40 ${640 - i * 16} C320 ${790 - i * 10} 700 ${470 - i * 14} 1320 ${660 - i * 18}`} fill="none" stroke={col} strokeOpacity=".75" strokeWidth={i === 0 ? 6 : 3} strokeLinecap="round" style={{ strokeDasharray: 1600, animation: `draw ${2 + i * 0.3}s ${i * 0.15}s ease-out both` }} />
-        ))}
-        <g style={{ animation: "drift 9s ease-in-out infinite alternate" }}>
-          <circle cx="150" cy="140" r="130" fill="#8B5CF6" fillOpacity=".16" />
-          <circle cx="1140" cy="580" r="190" fill="#FF2E93" fillOpacity=".14" />
-          <circle cx="1120" cy="130" r="70" fill="none" stroke="#22D3EE" strokeOpacity=".5" strokeWidth="3" />
-          <circle cx="130" cy="600" r="90" fill="none" stroke="#FFB020" strokeOpacity=".5" strokeWidth="3" />
-        </g>
-      </svg>
+      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
 
       <div className="relative px-6" style={{ animation: "rise .8s ease-out both" }}>
-        <div className="font-bold" style={{ fontFamily: "Outfit", color: SOFT, fontSize: "clamp(14px,2vw,20px)" }}>Group 6 · MSII · S5 · English</div>
-        <h1 className="font-extrabold mt-2" style={{ fontFamily: "Outfit", color: GOLD, fontSize: "clamp(28px,5vw,60px)", lineHeight: 1.1 }}>Globalization and Global Citizenship</h1>
+        <div className="font-bold" style={{ fontFamily: "Outfit", color: SOFT, fontSize: "clamp(14px,2vh,20px)" }}>Group 6 · MSII · S5 · English</div>
+        <h1 className="font-extrabold mt-2" style={{ fontFamily: "Outfit", color: GOLD, fontSize: "clamp(28px,6vh,60px)", lineHeight: 1.1 }}>Globalization and Global Citizenship</h1>
+        <div className="flex justify-center mt-3"><span style={{ width: 44, height: 6, background: BLUE }} /><span style={{ width: 44, height: 6, background: GOLD }} /><span style={{ width: 44, height: 6, background: GREEN }} /></div>
       </div>
 
-      {/* ring */}
-      <div className="relative mt-8" style={{ width: 220, height: 220, animation: phase === "ready" ? "ringPop 1.6s ease-in-out infinite" : "none" }}>
-        <svg width="220" height="220" viewBox="0 0 220 220" style={{ position: "absolute", inset: 0 }}>
-          <circle cx="110" cy="110" r={R} fill="rgba(255,255,255,.04)" stroke="#fff" strokeOpacity=".18" strokeWidth="10" />
-          {phase === "loading" && (
-            <g style={{ transformOrigin: "110px 110px", animation: "spin 1.1s linear infinite" }}>
-              <circle cx="110" cy="110" r="106" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="3" strokeLinecap="round" strokeDasharray="40 627" />
+      {/* loading ring, then a bouncing button, then the countdown */}
+      <div className="relative flex items-center justify-center" style={{ width: ringBox, height: ringBox, marginTop: "3vh" }}>
+        {phase !== "ready" && (
+          <svg viewBox="0 0 340 340" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", filter: "drop-shadow(0 0 22px rgba(255,255,255,.3))" }}>
+            <defs>
+              <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#fff" /><stop offset=".55" stopColor={GOLD} /><stop offset="1" stopColor={GREEN} />
+              </linearGradient>
+            </defs>
+            <circle cx="170" cy="170" r={R} fill="rgba(255,255,255,.06)" stroke="#fff" strokeOpacity=".2" strokeWidth="12" />
+            {phase === "loading" && (
+              <g style={{ transformOrigin: "170px 170px", animation: "spin 1.1s linear infinite" }}>
+                <circle cx="170" cy="170" r="158" fill="none" stroke="#fff" strokeOpacity=".8" strokeWidth="3" strokeLinecap="round" strokeDasharray="60 933" />
+              </g>
+            )}
+            <g transform="rotate(-90 170 170)">
+              {phase === "count"
+                ? <circle key={n} cx="170" cy="170" r={R} fill="none" stroke="url(#rg)" strokeWidth="12" strokeLinecap="round" strokeDasharray={CIRC} style={{ animation: "ringDown 1s linear both" }} />
+                : <circle cx="170" cy="170" r={R} fill="none" stroke="url(#rg)" strokeWidth="12" strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={offset} />}
             </g>
-          )}
-          <g transform="rotate(-90 110 110)">
-            {phase === "count"
-              ? <circle key={n} cx="110" cy="110" r={R} fill="none" stroke={GOLD} strokeWidth="10" strokeLinecap="round" strokeDasharray={CIRC} style={{ animation: "ringDown 1s linear both" }} />
-              : <circle cx="110" cy="110" r={R} fill="none" stroke={GOLD} strokeWidth="10" strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={offset} />}
-          </g>
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          {phase === "loading" && <span className="font-extrabold" style={{ fontFamily: "Outfit", fontSize: 44 }}>{Math.round(p)}%</span>}
-          {phase === "ready" && (
-            <button onClick={start} aria-label="Start presentation" className="flex items-center justify-center rounded-full" style={{ width: 120, height: 120, background: GOLD, color: "#fff", border: "none", cursor: "pointer", boxShadow: "0 0 40px rgba(255,90,31,.7)" }}>
-              <svg width="46" height="46" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+          </svg>
+        )}
+        {phase === "loading" && <span className="relative font-extrabold" style={{ fontFamily: "Outfit", fontSize: "clamp(30px,7vh,56px)" }}>{Math.round(p)}%</span>}
+        {phase === "count" && <span key={n} className="relative font-extrabold" style={{ fontFamily: "Outfit", fontSize: "clamp(80px,19vh,160px)", lineHeight: 1, color: GOLD, animation: "numIn .55s ease-out both" }}>{n}</span>}
+        {phase === "ready" && (
+          <div className="flex flex-col items-center">
+            <button onClick={start} aria-label="Start presentation" className="flex items-center gap-2 font-extrabold transition-transform hover:scale-105 active:scale-95"
+              style={{ animation: "bounce 1.1s infinite", fontFamily: "Outfit", fontSize: "clamp(15px,2.3vh,20px)", padding: "10px 26px", borderRadius: 8, background: "#fff", color: "rgb(8, 44, 120)", border: "none", cursor: "pointer", boxShadow: "0 4px 0 rgba(0,0,0,.18), 0 12px 28px rgba(0,0,0,.25)" }}>
+              <svg width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+              Start presentation
             </button>
-          )}
-          {phase === "count" && <span key={n} className="font-extrabold" style={{ fontFamily: "Outfit", fontSize: 110, lineHeight: 1, color: GOLD, animation: "numIn .55s ease-out both" }}>{n}</span>}
-        </div>
+            <div style={{ width: 170, height: 10, marginTop: 22, borderRadius: "50%", background: "rgba(0,0,0,.4)", filter: "blur(4px)", animation: "groundShadow 1.1s infinite" }} />
+          </div>
+        )}
       </div>
 
-      <div className="relative mt-8 font-bold" style={{ fontFamily: "Outfit", fontSize: "clamp(16px,2.2vw,26px)", animation: phase === "ready" ? "pulse 1.6s ease-in-out infinite" : "none" }}>{caption}</div>
-      <div className="relative mt-2 text-sm" style={{ color: SOFT, minHeight: 20, opacity: phase === "ready" ? 1 : 0, transition: "opacity .4s" }}>
+      <div className="relative font-bold" style={{ marginTop: "2vh", fontFamily: "Outfit", fontSize: "clamp(16px,2.8vh,26px)", animation: phase === "ready" ? "pulse 1.6s ease-in-out infinite" : "none" }}>{caption}</div>
+      <div className="relative mt-1 text-sm" style={{ color: SOFT, minHeight: 20, opacity: phase === "ready" ? 1 : 0, transition: "opacity .4s" }}>
         Use ← → or click the sides to move · Esc to leave
       </div>
+      <div className="relative mt-4 mb-10 flex flex-wrap justify-center gap-x-5 gap-y-1 px-6 text-sm" style={{ color: "rgba(255,255,255,.8)" }}>
+        {members.map((m) => <span key={m[0]}>{m[0]}</span>)}
+      </div>
+
+      {/* the same two parallel waves as on the slides */}
+      <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 1280 90" preserveAspectRatio="none" style={{ height: 70, pointerEvents: "none" }}>
+        <path d="M0 30 C200 10 400 50 640 30 S1080 10 1280 30 V90 H0Z" fill={BLUE} fillOpacity=".55" />
+        <path d="M0 50 C200 30 400 70 640 50 S1080 30 1280 50 V90 H0Z" fill="#fff" />
+      </svg>
     </div>
   );
 }
@@ -414,12 +444,12 @@ function Slides({ onExit }) {
       onTouchEnd={(e) => { if (touch.current == null) return; const dx = e.changedTouches[0].clientX - touch.current; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); touch.current = null; }}>
       <style>{CSS}</style>
       <Stage color={s.bg.color}>
-        <div key={s.id} style={{ animation: "fade .5s both" }}><SlideView slide={s} /></div>
+        <div key={s.id} style={{ animation: "fade .5s both" }}><SlideView slide={s} index={cur} total={SLIDES.length} /></div>
       </Stage>
       <div className="fixed top-0 left-0 h-1 transition-all duration-500" style={{ width: `${((cur + 1) / SLIDES.length) * 100}%`, background: GOLD }} />
       <button aria-label="Previous slide" className="fixed left-0 top-0 h-full w-1/5 opacity-0" style={{ cursor: cur === 0 ? "default" : "w-resize" }} onClick={() => go(-1)} />
       <button aria-label="Next slide" className="fixed right-0 top-0 h-full w-1/5 opacity-0" style={{ cursor: cur === SLIDES.length - 1 ? "default" : "e-resize" }} onClick={() => go(1)} />
-      <div className="fixed bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-sm font-bold opacity-0 hover:opacity-100 transition" style={{ background: "rgba(255,90,31,.9)", color: "#fff" }}>
+      <div className="fixed bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-sm font-bold opacity-0 hover:opacity-100 transition" style={{ background: "rgba(0,0,0,.45)", color: "#fff" }}>
         {cur + 1} / {SLIDES.length}
       </div>
     </div>
