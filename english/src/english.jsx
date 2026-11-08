@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import a from "./assets/a.jpg";
 import b from "./assets/b.jpg";
 import c from "./assets/c.jpg";
@@ -9,9 +9,18 @@ import g from "./assets/g.jpg";
 import h from "./assets/h.jpg";
 
 /* Images live in  src/assets/  (a.jpg ... h.jpg) and are imported above */
-const NAVY = "#041640", GREEN = "#19D26B", UI = "#06235F";
+
+/* ---------- Black background, orange-red text, many-colour curves ---------- */
+const BG = "#0A0A10";      // slide background (black)
+const DEEP = "#000000";    // darkest edge of the start screen
+const HOT = "#FF4500";     // orange-red
+const GOLD = "#FF5A1F";    // orange-red for titles, bars and accents
+const SOFT = "#FFB27A";    // soft orange for sub-titles
+const CREAM = "#FFF1E6";   // light details
+const INK = "#000000";
+const RIB = ["#FF4500", "#FFB020", "#FF2E93", "#8B5CF6", "#22D3EE"]; // curve colours
+
 const avatar = (c1, c2) => "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs><rect width='200' height='200' fill='url(#g)'/><circle cx='100' cy='78' r='38' fill='#fff' fill-opacity='.92'/><path d='M28 200c0-46 32-74 72-74s72 28 72 74z' fill='#fff' fill-opacity='.92'/></svg>`);
-const FONTS = ["Outfit", "Nunito Sans", "Playfair Display", "Lora", "Montserrat", "Space Grotesk", "Caveat"];
 const PICS = [a, b, c, d, e, f, g, h];
 
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -22,29 +31,29 @@ const box = (x, y, w, h, color) => ({ id: uid(), type: "shape", x, y, w, h, colo
 const topic = (title, para, cap, pic, flip) => {
   const x = flip ? 650 : 70;
   return {
-    id: uid(), bg: { color: NAVY, img: pic, dim: 1, flip },
+    id: uid(), bg: { color: BG, img: pic, dim: 1, flip },
     els: [
-      box(x, 70, 90, 8, GREEN),
-      txt(title, x, 92, 560, { font: "Outfit", size: 36, weight: 800, color: GREEN }),
+      box(x, 70, 90, 8, GOLD),
+      txt(title, x, 92, 560, { font: "Outfit", size: 36, weight: 800, color: GOLD }),
       txt(para, x, 268, 560, { size: 19 }),
-      txt("Image: " + cap, flip ? 70 : 700, 692, 510, { size: 14, italic: true, color: NAVY, shadow: false, align: flip ? "left" : "right" }),
+      txt("Image: " + cap, flip ? 70 : 700, 655, 510, { size: 14, italic: true, color: "#ffffff", align: flip ? "left" : "right" }),
     ],
   };
 };
 
-const refsSlide = (n, text) => ({ id: uid(), bg: { color: NAVY, img: "", dim: 0 }, els: [
-  box(70, 60, 90, 8, GREEN),
-  txt("References (" + n + " of 4)", 70, 82, 900, { font: "Outfit", size: 40, weight: 800, color: GREEN }),
+const refsSlide = (n, text) => ({ id: uid(), bg: { color: BG, img: "", dim: 0 }, els: [
+  box(70, 60, 90, 8, GOLD),
+  txt("References (" + n + " of 4)", 70, 82, 900, { font: "Outfit", size: 40, weight: 800, color: GOLD }),
   txt(text, 70, 150, 1140, { size: 17 }),
 ] });
 
-const members = [["Keza Nadia", "KN", "#19D26B", "#0B5A8F"], ["Tuyishime Esther", "TE", "#2D7FF9", "#19D26B"], ["Itangishaka Erneste", "IE", "#0B5A8F", "#2D7FF9"], ["Mutabazi Queen Peace", "MQ", "#19D26B", "#2D7FF9"], ["Umumararungu Sandrine Joana", "US", "#2D7FF9", "#0B5A8F"]];
+const members = [["Keza Nadia", "KN", "#FF4500", "#FFB020"], ["Tuyishime Esther", "TE", "#FF2E93", "#8B5CF6"], ["Itangishaka Erneste", "IE", "#22D3EE", "#8B5CF6"], ["Mutabazi Queen Peace", "MQ", "#FFB020", "#FF2E93"], ["Umumararungu Sandrine Joana", "US", "#FF4500", "#FF2E93"]];
 
-const START = [
-  { id: uid(), bg: { color: NAVY, img: a, dim: 0.88, full: true }, els: [
-    box(520, 128, 240, 8, GREEN),
-    txt("Globalization and Global Citizenship", 90, 40, 1100, { font: "Outfit", size: 56, weight: 800, align: "center", color: GREEN }),
-    txt("Group 6 · MSII · S5 · English", 90, 168, 1100, { size: 28, align: "center", color: "#8FF0B8" }),
+const SLIDES = [
+  { id: uid(), bg: { color: BG, img: a, dim: 0.88, full: true }, els: [
+    box(520, 128, 240, 8, GOLD),
+    txt("Globalization and Global Citizenship", 90, 40, 1100, { font: "Outfit", size: 56, weight: 800, align: "center", color: GOLD }),
+    txt("Group 6 · MSII · S5 · English", 90, 168, 1100, { size: 28, align: "center", color: SOFT }),
     ...members.flatMap(([n, ini, c1, c2], i) => {
       const x = 59 + i * 238;
       return [img(avatar(c1, c2), x + 30, 270, 150, 150, { circle: true, label: ini }),
@@ -130,389 +139,297 @@ const START = [
     "UNESCO. (n.d.). Kinyarwanda in Rwanda. World Atlas of Languages. https://en.wal.unesco.org/countries/rwanda/languages/kinyarwanda-2",
     "U.S. International Trade Administration. (n.d.). Rwanda agriculture sector. https://trade.gov/country-commercial-guides/rwanda-agriculture-sector",
   ].join("\n\n")),
-  { id: uid(), bg: { color: NAVY, img: a, dim: 0.72, full: true }, els: [
-    txt("Thank you!", 90, 220, 1100, { font: "Outfit", size: 130, weight: 800, align: "center", color: GREEN }),
-    box(540, 400, 200, 8, GREEN),
+  { id: uid(), bg: { color: BG, img: a, dim: 0.72, full: true }, els: [
+    txt("Thank you!", 90, 220, 1100, { font: "Outfit", size: 130, weight: 800, align: "center", color: GOLD }),
+    box(540, 400, 200, 8, GOLD),
     txt("Congratulations to all of us · Group 6 · Questions are welcome", 90, 440, 1100, { size: 30, align: "center" }),
   ] },
 ];
 
-/* ---------- Scale context + Stage ---------- */
-const ScaleCtx = createContext(1);
-function Stage({ children, className = "" }) {
+/* ---------- Shared CSS ---------- */
+const CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Nunito+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+  @keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+  @keyframes grow{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}}
+  @keyframes float{50%{transform:translateY(-12px)}}
+  @keyframes kb{from{transform:scale(1)}to{transform:scale(1.1)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes draw{from{stroke-dashoffset:1200}to{stroke-dashoffset:0}}
+  @keyframes drift{to{transform:translate(28px,20px)}}
+  @keyframes bubble{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-480px);opacity:0}}
+  @keyframes wave{to{transform:translateX(-90px)}}
+  @keyframes wave2{from{transform:translateX(-90px)}to{transform:translateX(0)}}
+  @keyframes glow{50%{box-shadow:0 0 22px 4px rgba(255,90,31,.85)}}
+  @keyframes reveal{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0)}}
+  @keyframes revealL{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+  @keyframes numIn{from{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1.15)}to{opacity:1;transform:scale(1)}}
+  @keyframes ringDown{from{stroke-dashoffset:0}to{stroke-dashoffset:603}}
+  @keyframes ringPop{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+`;
+
+/* ---------- Stage: fills the whole screen, no black bars ---------- */
+function Stage({ color, children }) {
   const ref = useRef(null);
   const [k, setK] = useState(0.5);
   useEffect(() => {
-    const fit = () => ref.current && setK(Math.min(ref.current.clientWidth / 1280, ref.current.clientHeight / 720));
+    const fit = () => {
+      if (!ref.current) return;
+      const w = ref.current.clientWidth / 1280, h = ref.current.clientHeight / 720;
+      const fitK = Math.min(w, h), coverK = Math.max(w, h);
+      // fill the screen; only crop when the screen is close to 16:9, otherwise fit and let the slide colour fill the rest
+      setK(coverK / fitK <= 1.15 ? coverK : fitK);
+    };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(ref.current);
     return () => ro.disconnect();
   }, []);
   return (
-    <div ref={ref} className={"flex items-center justify-center overflow-hidden " + className}>
-      <div style={{ width: 1280 * k, height: 720 * k }} className="relative shadow-xl overflow-hidden rounded-lg">
-        <div style={{ width: 1280, height: 720, transform: `scale(${k})`, transformOrigin: "top left" }}>
-          <ScaleCtx.Provider value={k}>{children}</ScaleCtx.Provider>
-        </div>
+    <div ref={ref} className="fixed inset-0 flex items-center justify-center overflow-hidden" style={{ background: color, transition: "background .4s" }}>
+      <div style={{ width: 1280 * k, height: 720 * k, flexShrink: 0, position: "relative" }}>
+        <div style={{ width: 1280, height: 720, transform: `scale(${k})`, transformOrigin: "top left" }}>{children}</div>
       </div>
     </div>
   );
 }
 
-/* ---------- One element (text / image / shape) ---------- */
-function Elem({ el, i, live, selected, onSel, onChange, animate }) {
-  const k = useContext(ScaleCtx);
-  const [editing, setEditing] = useState(false);
-  const [bad, setBad] = useState(false);
-  const tRef = useRef(null);
-  useEffect(() => { setBad(false); }, [el.src]);
-  useEffect(() => { if (editing && tRef.current) { tRef.current.focus(); } }, [editing]);
-
-  const drag = (e, mode) => {
-    if (!live || editing) return;
-    e.stopPropagation(); onSel(el.id);
-    const sx = e.clientX, sy = e.clientY, o = { ...el };
-    const mv = (ev) => {
-      const dx = (ev.clientX - sx) / k, dy = (ev.clientY - sy) / k;
-      if (mode === "move") onChange(el.id, { x: Math.round(o.x + dx), y: Math.round(o.y + dy) });
-      else onChange(el.id, { w: Math.max(40, Math.round(o.w + dx)), ...(el.type !== "text" ? { h: Math.max(20, Math.round(o.h + dy)) } : {}) });
-    };
-    const up = () => { window.removeEventListener("pointermove", mv); window.removeEventListener("pointerup", up); };
-    window.addEventListener("pointermove", mv); window.addEventListener("pointerup", up);
-  };
-
+/* ---------- One element ---------- */
+function Elem({ el, i }) {
   const base = {
     position: "absolute", left: el.x, top: el.y, width: el.w, height: el.type === "text" ? "auto" : el.h,
-    outline: selected && live ? `${2 / k}px solid #4C84FF` : "none", pointerEvents: live ? "auto" : "none",
-    animation: !animate ? "none" : el.type === "shape" ? `grow .8s ${0.1 + i * 0.12}s ease-out both, glow 2.6s ${1 + i * 0.1}s ease-in-out infinite` : el.type === "text" ? "none" : `up .7s ${0.1 + i * 0.12}s ease-out both`, transformOrigin: "left center", touchAction: "none",
+    animation: el.type === "shape" ? `grow .8s ${0.1 + i * 0.12}s ease-out both, glow 2.6s ${1 + i * 0.1}s ease-in-out infinite` : el.type === "text" ? "none" : `up .7s ${0.1 + i * 0.12}s ease-out both`,
+    transformOrigin: "left center",
   };
-  const handle = selected && live && !editing && (
-    <div onPointerDown={(e) => drag(e, "size")} style={{ position: "absolute", right: -9 / k, bottom: -9 / k, width: 18 / k, height: 18 / k, background: "#fff", border: `${2 / k}px solid #4C84FF`, borderRadius: "50%", cursor: "nwse-resize" }} />
-  );
+  if (el.type === "shape") return <div style={{ ...base, background: el.color, borderRadius: 6 }} />;
 
-  if (el.type === "shape") return (
-    <div style={{ ...base, background: el.color, borderRadius: 6, cursor: "move" }} onPointerDown={(e) => drag(e, "move")}>{handle}</div>
-  );
-
-  if (el.type === "image") {
-    const show = el.src && !bad;
-    return (
-      <div style={{ ...base, cursor: "move" }} onPointerDown={(e) => drag(e, "move")}>
-        <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: el.circle ? "50%" : (el.radius ?? 14), background: "#2A4A99", border: el.circle ? `5px solid ${GREEN}` : "none", boxSizing: "border-box", animation: animate && el.circle ? `float 4s ${i * 0.4}s ease-in-out infinite` : "none" }}>
-          {show ? <img src={el.src} alt="" draggable={false} onError={() => setBad(true)} style={{ width: "100%", height: "100%", objectFit: el.fit }} />
-            : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#8FF0B8", fontFamily: "Outfit", fontWeight: 800, fontSize: Math.min(el.w, el.h) / 3 }}>{el.label || "Image"}</div>}
-        </div>
-        {handle}
+  if (el.type === "image") return (
+    <div style={base}>
+      <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: el.circle ? "50%" : 14, background: "#1A1A24", border: el.circle ? `5px solid ${GOLD}` : "none", boxSizing: "border-box", animation: el.circle ? `float 4s ${i * 0.4}s ease-in-out infinite` : "none" }}>
+        {el.src
+          ? <img src={el.src} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: el.fit }} />
+          : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: CREAM, fontFamily: "Outfit", fontWeight: 800, fontSize: Math.min(el.w, el.h) / 3 }}>{el.label || "Image"}</div>}
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div style={base} onPointerDown={(e) => drag(e, "move")} onDoubleClick={() => live && setEditing(true)}>
-      <div ref={tRef} contentEditable={editing} suppressContentEditableWarning
-        onBlur={(e) => { if (editing) { setEditing(false); onChange(el.id, { text: e.currentTarget.innerText }); } }}
-        style={{ fontFamily: `'${el.font}', sans-serif`, fontSize: el.size, color: el.color, fontWeight: el.weight, fontStyle: el.italic ? "italic" : "normal", textAlign: el.align, lineHeight: 1.4, textShadow: el.shadow === false ? "none" : "0 1px 8px rgba(0,0,0,.45)", whiteSpace: "pre-wrap", cursor: editing ? "text" : "move", outline: "none", padding: 2, userSelect: editing ? "text" : "none" }}>
-        {animate && !live ? el.text.split("\n").map((l, j) => <div key={j} style={{ animation: `up .6s ${0.3 + i * 0.12 + j * 0.2}s ease-out both` }}>{l.length > 140 ? l.split(/(?<=\.)\s/).map((q, k) => <span key={k} style={{ animation: `fade .8s ${0.6 + k * 0.7}s ease-out both` }}>{q} </span>) : l || "\u00A0"}</div>) : el.text}
+    <div style={base}>
+      <div style={{ fontFamily: `'${el.font}', sans-serif`, fontSize: el.size, color: el.color, fontWeight: el.weight, fontStyle: el.italic ? "italic" : "normal", textAlign: el.align, lineHeight: 1.4, textShadow: el.shadow === false ? "none" : "0 1px 8px rgba(0,0,0,.7)", whiteSpace: "pre-wrap", padding: 2 }}>
+        {el.text.split("\n").map((l, j) => (
+          <div key={j} style={{ animation: `up .6s ${0.3 + i * 0.12 + j * 0.2}s ease-out both` }}>
+            {l.length > 140
+              ? l.split(/(?<=\.)\s/).map((q, n) => <span key={n} style={{ animation: `fade .8s ${0.6 + n * 0.7}s ease-out both` }}>{q} </span>)
+              : l || "\u00A0"}
+          </div>
+        ))}
       </div>
-      {handle}
     </div>
   );
 }
 
-/* ---------- Curved blue-and-white background ---------- */
+/* ---------- Black background with flowing multi-colour curves ---------- */
 const BUBBLES = [[90, 600, 16, 8], [260, 640, 9, 11], [430, 620, 13, 9], [60, 330, 8, 12], [520, 470, 11, 10], [200, 220, 15, 13], [380, 120, 9, 14]];
-function Deco({ b, animate }) {
+const WAVES = [
+  ["#8B5CF6", 0.75, 688, "wave 8s ease-in-out infinite alternate"],
+  ["#FF2E93", 0.85, 697, "wave2 7s ease-in-out infinite alternate"],
+  ["#FF4500", 0.95, 705, "wave 6s ease-in-out infinite alternate"],
+  ["#FFB020", 1, 713, "wave2 9s ease-in-out infinite alternate"],
+];
+function Deco({ b }) {
   const split = b.img && !b.full;
-  const on = (css) => (animate ? { animation: css } : {});
   const cx = split ? 0 : 1280;
   return (
     <svg width="1280" height="720" viewBox="0 0 1280 720" style={{ position: "absolute", inset: 0, pointerEvents: "none", transform: b.flip ? "scaleX(-1)" : "none" }}>
+      {/* black panel with a ribbon of colours along its curved edge */}
       {split && (<>
         <path d="M0 0 H690 C610 200 780 520 650 720 H0 Z" fill={b.color} />
-        <path d="M704 0 C624 200 794 520 664 720" fill="none" stroke="#fff" strokeWidth="10" strokeLinecap="round" style={animate ? { strokeDasharray: 1200, animation: "draw 1.8s ease-out both" } : {}} />
-        <path d="M728 0 C648 200 818 520 688 720" fill="none" stroke={GREEN} strokeWidth="4" strokeLinecap="round" style={animate ? { strokeDasharray: 1200, animation: "draw 2.2s .3s ease-out both" } : {}} />
+        {RIB.map((col, i) => (
+          <path key={col} d={`M${700 + i * 15} 0 C${620 + i * 15} 200 ${790 + i * 15} 520 ${660 + i * 15} 720`} fill="none" stroke={col} strokeWidth={i === 0 ? 9 : 5} strokeLinecap="round" style={{ strokeDasharray: 1200, animation: `draw ${1.6 + i * 0.35}s ${i * 0.15}s ease-out both` }} />
+        ))}
       </>)}
-      <g style={on("drift 9s ease-in-out infinite alternate")}>
-        <circle cx={cx} cy="0" r="240" fill="#fff" fillOpacity=".06" />
-        <circle cx={cx} cy="0" r="160" fill="none" stroke="#fff" strokeOpacity=".35" strokeWidth="3" />
-        <circle cx={split ? 0 : 0} cy="720" r="120" fill="#3D7BFF" fillOpacity=".25" />
+
+      {/* soft coloured glows in the corners */}
+      <g style={{ animation: "drift 9s ease-in-out infinite alternate" }}>
+        <circle cx={cx} cy="0" r="250" fill="#FF4500" fillOpacity=".16" />
+        <circle cx={cx} cy="0" r="165" fill="none" stroke="#FF2E93" strokeOpacity=".6" strokeWidth="3" />
+        <circle cx={cx} cy="0" r="205" fill="none" stroke="#FFB020" strokeOpacity=".4" strokeWidth="2" />
+        <circle cx="0" cy="720" r="130" fill="#8B5CF6" fillOpacity=".28" />
+        <circle cx="0" cy="720" r="190" fill="none" stroke="#22D3EE" strokeOpacity=".4" strokeWidth="2" />
       </g>
-      {animate && BUBBLES.map(([x, y, r, d], i) => (
-        <circle key={i} cx={x} cy={y} r={r} fill="#fff" fillOpacity=".18" style={{ animation: `bubble ${d}s ${i * 0.8}s ease-in infinite` }} />
+
+      {/* rising bubbles in the curve colours */}
+      {BUBBLES.map(([x, y, r, d], i) => (
+        <circle key={i} cx={x} cy={y} r={r} fill={RIB[i % RIB.length]} fillOpacity=".4" style={{ animation: `bubble ${d}s ${i * 0.8}s ease-in infinite` }} />
       ))}
-      <g style={on("wave 7s ease-in-out infinite alternate")}>
-        <path d="M-100 650 C100 620 300 680 500 650 S900 620 1100 650 S1300 680 1400 650 V740 H-100Z" fill="#3D7BFF" fillOpacity=".5" />
-      </g>
-      <g style={on("wave2 9s ease-in-out infinite alternate")}>
-        <path d="M-100 672 C120 642 320 702 520 672 S920 642 1120 672 S1320 702 1400 672 V740 H-100Z" fill="#FFFFFF" />
-      </g>
+
+      {/* four layered waves along the bottom */}
+      {WAVES.map(([col, op, y, anim]) => (
+        <g key={col} style={{ animation: anim }}>
+          <path d={`M-100 ${y} C100 ${y - 20} 300 ${y + 16} 500 ${y} S900 ${y - 20} 1100 ${y} S1300 ${y + 16} 1400 ${y} V740 H-100Z`} fill={col} fillOpacity={op} />
+        </g>
+      ))}
     </svg>
   );
 }
 
 /* ---------- One slide ---------- */
-function SlideView({ slide, live, sel, onSel, onChange, animate }) {
+function SlideView({ slide }) {
   const b = slide.bg;
   return (
-    <div style={{ width: 1280, height: 720, position: "relative", overflow: "hidden", background: b.color }} onPointerDown={() => live && onSel(null)}>
-      {b.img && <img src={b.img} alt="" draggable={false} onError={(e) => (e.currentTarget.style.display = "none")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transformOrigin: b.flip ? "20% 50%" : "80% 50%", animation: animate ? `${b.flip ? "revealL" : "reveal"} 1.4s ease-out both, kb 18s ease-out both` : "none" }} />}
-      {b.img && (b.full || b.curves === false) && <div style={{ position: "absolute", inset: 0, opacity: b.dim, background: b.full ? b.color : `linear-gradient(${b.flip ? 270 : 90}deg, ${b.color} 0%, ${b.color} 44%, ${b.color}00 62%)` }} />}
-      {b.curves !== false && <Deco b={b} animate={animate} />}
-      {slide.els.map((el, i) => (
-        <Elem key={el.id} el={el} i={i} live={live} animate={animate} selected={sel === el.id} onSel={onSel} onChange={onChange} />
-      ))}
+    <div style={{ width: 1280, height: 720, position: "relative", overflow: "hidden", background: b.color }}>
+      {b.img && <img src={b.img} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transformOrigin: b.flip ? "20% 50%" : "80% 50%", animation: `${b.flip ? "revealL" : "reveal"} 1.4s ease-out both, kb 18s ease-out both` }} />}
+      {b.img && b.full && <div style={{ position: "absolute", inset: 0, opacity: b.dim, background: b.color }} />}
+      <Deco b={b} />
+      {slide.els.map((el, i) => <Elem key={el.id} el={el} i={i} />)}
+    </div>
+  );
+}
+
+/* ---------- Intro: loading ring, press Enter, 2-1 countdown ---------- */
+const R = 96, CIRC = 2 * Math.PI * R; // ≈ 603
+
+function Intro({ onStart }) {
+  const [phase, setPhase] = useState("loading"); // loading | ready | count
+  const [p, setP] = useState(0);
+  const [n, setN] = useState(2);
+  const loaded = useRef(0);
+  const timers = useRef([]);
+
+  // real loading: wait for the pictures, with a short minimum time so the ring is visible
+  useEffect(() => {
+    PICS.forEach((src) => { const im = new Image(); im.onload = im.onerror = () => { loaded.current += 1; }; im.src = src; });
+    const t0 = Date.now();
+    const id = setInterval(() => {
+      const timeP = Math.min(100, ((Date.now() - t0) / 2400) * 100);
+      const imgP = (loaded.current / PICS.length) * 100;
+      const v = Math.min(timeP, imgP);
+      setP(v);
+      if (v >= 100) { clearInterval(id); setPhase("ready"); }
+    }, 40);
+    return () => { clearInterval(id); timers.current.forEach(clearTimeout); };
+  }, []);
+
+  const start = () => {
+    if (phase !== "ready") return;
+    document.documentElement.requestFullscreen?.().catch(() => {});
+    setN(2); setPhase("count");
+    timers.current = [setTimeout(() => setN(1), 1000), setTimeout(onStart, 2000)];
+  };
+
+  useEffect(() => {
+    const key = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); start(); } };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  });
+
+  const offset = phase === "loading" ? CIRC * (1 - p / 100) : 0;
+  const caption = phase === "loading" ? "Loading your slides…" : phase === "ready" ? "Press Enter to start the presentation" : n === 2 ? "Get ready…" : "Here we go!";
+
+  return (
+    <div className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden text-center" style={{ background: `radial-gradient(circle at 50% 40%, #2A0F0A 0%, ${BG} 55%, ${DEEP} 100%)`, fontFamily: "'Nunito Sans', sans-serif", color: "#fff" }}>
+      <style>{CSS}</style>
+
+      {/* flowing coloured curves */}
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" style={{ pointerEvents: "none" }}>
+        {RIB.map((col, i) => (
+          <path key={"t" + col} d={`M-40 ${90 + i * 16} C300 ${-60 + i * 10} 640 ${260 + i * 14} 1320 ${40 + i * 18}`} fill="none" stroke={col} strokeOpacity=".75" strokeWidth={i === 0 ? 6 : 3} strokeLinecap="round" style={{ strokeDasharray: 1600, animation: `draw ${2 + i * 0.3}s ${i * 0.15}s ease-out both` }} />
+        ))}
+        {RIB.map((col, i) => (
+          <path key={"b" + col} d={`M-40 ${640 - i * 16} C320 ${790 - i * 10} 700 ${470 - i * 14} 1320 ${660 - i * 18}`} fill="none" stroke={col} strokeOpacity=".75" strokeWidth={i === 0 ? 6 : 3} strokeLinecap="round" style={{ strokeDasharray: 1600, animation: `draw ${2 + i * 0.3}s ${i * 0.15}s ease-out both` }} />
+        ))}
+        <g style={{ animation: "drift 9s ease-in-out infinite alternate" }}>
+          <circle cx="150" cy="140" r="130" fill="#8B5CF6" fillOpacity=".16" />
+          <circle cx="1140" cy="580" r="190" fill="#FF2E93" fillOpacity=".14" />
+          <circle cx="1120" cy="130" r="70" fill="none" stroke="#22D3EE" strokeOpacity=".5" strokeWidth="3" />
+          <circle cx="130" cy="600" r="90" fill="none" stroke="#FFB020" strokeOpacity=".5" strokeWidth="3" />
+        </g>
+      </svg>
+
+      <div className="relative px-6" style={{ animation: "rise .8s ease-out both" }}>
+        <div className="font-bold" style={{ fontFamily: "Outfit", color: SOFT, fontSize: "clamp(14px,2vw,20px)" }}>Group 6 · MSII · S5 · English</div>
+        <h1 className="font-extrabold mt-2" style={{ fontFamily: "Outfit", color: GOLD, fontSize: "clamp(28px,5vw,60px)", lineHeight: 1.1 }}>Globalization and Global Citizenship</h1>
+      </div>
+
+      {/* ring */}
+      <div className="relative mt-8" style={{ width: 220, height: 220, animation: phase === "ready" ? "ringPop 1.6s ease-in-out infinite" : "none" }}>
+        <svg width="220" height="220" viewBox="0 0 220 220" style={{ position: "absolute", inset: 0 }}>
+          <circle cx="110" cy="110" r={R} fill="rgba(255,255,255,.04)" stroke="#fff" strokeOpacity=".18" strokeWidth="10" />
+          {phase === "loading" && (
+            <g style={{ transformOrigin: "110px 110px", animation: "spin 1.1s linear infinite" }}>
+              <circle cx="110" cy="110" r="106" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="3" strokeLinecap="round" strokeDasharray="40 627" />
+            </g>
+          )}
+          <g transform="rotate(-90 110 110)">
+            {phase === "count"
+              ? <circle key={n} cx="110" cy="110" r={R} fill="none" stroke={GOLD} strokeWidth="10" strokeLinecap="round" strokeDasharray={CIRC} style={{ animation: "ringDown 1s linear both" }} />
+              : <circle cx="110" cy="110" r={R} fill="none" stroke={GOLD} strokeWidth="10" strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={offset} />}
+          </g>
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          {phase === "loading" && <span className="font-extrabold" style={{ fontFamily: "Outfit", fontSize: 44 }}>{Math.round(p)}%</span>}
+          {phase === "ready" && (
+            <button onClick={start} aria-label="Start presentation" className="flex items-center justify-center rounded-full" style={{ width: 120, height: 120, background: GOLD, color: "#fff", border: "none", cursor: "pointer", boxShadow: "0 0 40px rgba(255,90,31,.7)" }}>
+              <svg width="46" height="46" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            </button>
+          )}
+          {phase === "count" && <span key={n} className="font-extrabold" style={{ fontFamily: "Outfit", fontSize: 110, lineHeight: 1, color: GOLD, animation: "numIn .55s ease-out both" }}>{n}</span>}
+        </div>
+      </div>
+
+      <div className="relative mt-8 font-bold" style={{ fontFamily: "Outfit", fontSize: "clamp(16px,2.2vw,26px)", animation: phase === "ready" ? "pulse 1.6s ease-in-out infinite" : "none" }}>{caption}</div>
+      <div className="relative mt-2 text-sm" style={{ color: SOFT, minHeight: 20, opacity: phase === "ready" ? 1 : 0, transition: "opacity .4s" }}>
+        Use ← → or click the sides to move · Esc to leave
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Slides only, full screen ---------- */
+function Slides({ onExit }) {
+  const [cur, setCur] = useState(0);
+  const touch = useRef(null);
+  const s = SLIDES[cur];
+  const go = (dir) => setCur((x) => Math.max(0, Math.min(SLIDES.length - 1, x + dir)));
+
+  useEffect(() => {
+    const key = (e) => {
+      if (["ArrowRight", " ", "PageDown", "Enter"].includes(e.key)) { e.preventDefault(); go(1); }
+      if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(-1); }
+      if (e.key === "Home") setCur(0);
+      if (e.key === "End") setCur(SLIDES.length - 1);
+      if (e.key === "Escape") { document.fullscreenElement && document.exitFullscreen?.(); onExit(); }
+    };
+    const fs = () => { if (!document.fullscreenElement) onExit(); };
+    window.addEventListener("keydown", key);
+    document.addEventListener("fullscreenchange", fs);
+    return () => { window.removeEventListener("keydown", key); document.removeEventListener("fullscreenchange", fs); };
+  }, []);
+
+  return (
+    <div onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
+      onTouchEnd={(e) => { if (touch.current == null) return; const dx = e.changedTouches[0].clientX - touch.current; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); touch.current = null; }}>
+      <style>{CSS}</style>
+      <Stage color={s.bg.color}>
+        <div key={s.id} style={{ animation: "fade .5s both" }}><SlideView slide={s} /></div>
+      </Stage>
+      <div className="fixed top-0 left-0 h-1 transition-all duration-500" style={{ width: `${((cur + 1) / SLIDES.length) * 100}%`, background: GOLD }} />
+      <button aria-label="Previous slide" className="fixed left-0 top-0 h-full w-1/5 opacity-0" style={{ cursor: cur === 0 ? "default" : "w-resize" }} onClick={() => go(-1)} />
+      <button aria-label="Next slide" className="fixed right-0 top-0 h-full w-1/5 opacity-0" style={{ cursor: cur === SLIDES.length - 1 ? "default" : "e-resize" }} onClick={() => go(1)} />
+      <div className="fixed bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-sm font-bold opacity-0 hover:opacity-100 transition" style={{ background: "rgba(255,90,31,.9)", color: "#fff" }}>
+        {cur + 1} / {SLIDES.length}
+      </div>
     </div>
   );
 }
 
 /* ---------- App ---------- */
-const readFile = (file, cb) => { const r = new FileReader(); r.onload = () => cb(r.result); r.readAsDataURL(file); };
-const enc = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o))));
-const dec = (s) => JSON.parse(decodeURIComponent(escape(atob(s))));
-
 export default function English() {
-  const [slides, setSlides] = useState(() => {
-    try { if (location.hash.startsWith("#d=")) return dec(location.hash.slice(3)); } catch (e) { /* use default */ }
-    return START;
-  });
-  const [cur, setCur] = useState(0);
-  const [sel, setSel] = useState(null);
-  const [present, setPresent] = useState(false);
-  const [panel, setPanel] = useState(null); // "bg" | "share"
-  const [email, setEmail] = useState("");
-  const [copied, setCopied] = useState(false);
-  const fileRef = useRef(null);
-  const fileMode = useRef(null);
-
-  const s = slides[Math.min(cur, slides.length - 1)];
-  const el = s.els.find((e) => e.id === sel);
-  const setS = (fn) => setSlides((a) => a.map((x, i) => (i === cur ? fn(x) : x)));
-  const change = (id, p) => setS((x) => ({ ...x, els: x.els.map((e) => (e.id === id ? { ...e, ...p } : e)) }));
-  const setBg = (p) => setS((x) => ({ ...x, bg: { ...x.bg, ...p } }));
-  const addEl = (e) => { setS((x) => ({ ...x, els: [...x.els, e] })); setSel(e.id); };
-  const delEl = () => { setS((x) => ({ ...x, els: x.els.filter((e) => e.id !== sel) })); setSel(null); };
-  const order = (d) => setS((x) => {
-    const i = x.els.findIndex((e) => e.id === sel), j = d > 0 ? x.els.length - 1 : 0, a = [...x.els];
-    const [m] = a.splice(i, 1); a.splice(j, 0, m); return { ...x, els: a };
-  });
-  const go = (d) => { setCur((c) => Math.max(0, Math.min(slides.length - 1, c + d))); setSel(null); };
-  const addSlide = () => {
-    const n = { id: uid(), bg: { color: NAVY, img: "", dim: 0.78 }, els: [box(70, 110, 90, 8, GREEN), txt("New slide title", 70, 140, 700, { font: "Outfit", size: 52, weight: 800, color: GREEN }), txt("• Point one\n• Point two\n• Point three", 70, 360, 700)] };
-    setSlides((a) => [...a.slice(0, cur + 1), n, ...a.slice(cur + 1)]); setCur(cur + 1); setSel(null);
-  };
-  const dupSlide = () => {
-    const c = { ...s, id: uid(), els: s.els.map((e) => ({ ...e, id: uid() })) };
-    setSlides((a) => [...a.slice(0, cur + 1), c, ...a.slice(cur + 1)]); setCur(cur + 1);
-  };
-  const delSlide = () => { if (slides.length > 1) { setSlides((a) => a.filter((_, i) => i !== cur)); setCur(Math.max(0, cur - 1)); setSel(null); } };
-  const moveSlide = (d) => {
-    const j = cur + d; if (j < 0 || j >= slides.length) return;
-    setSlides((a) => { const b = [...a]; [b[cur], b[j]] = [b[j], b[cur]]; return b; }); setCur(j);
-  };
-  const pickFile = (mode) => { fileMode.current = mode; fileRef.current.value = ""; fileRef.current.click(); };
-  const onFile = (e) => {
-    const f = e.target.files[0]; if (!f) return;
-    readFile(f, (src) => {
-      if (fileMode.current === "add") addEl(img(src, 400, 200, 400, 300));
-      else if (fileMode.current === "replace") change(sel, { src });
-      else setBg({ img: src });
-    });
-  };
-  const link = () => `${location.origin}${location.pathname}#d=${enc(slides.map((x) => ({ ...x, bg: { ...x.bg, img: (x.bg.img.startsWith("data:") && x.bg.img.length > 5000) ? "" : x.bg.img }, els: x.els.map((e) => (e.src && e.src.startsWith("data:") && e.src.length > 5000 ? { ...e, src: "" } : e)) })))}`;
-  const copy = () => { navigator.clipboard?.writeText(link()); setCopied(true); setTimeout(() => setCopied(false), 1800); };
-  const sendMail = () => { window.location.href = `mailto:${email}?subject=${encodeURIComponent("Presentation: Globalization and Global Citizenship")}&body=${encodeURIComponent("Open and edit our slides here:\n" + link())}`; };
-  const startPresent = () => { setSel(null); setPresent(true); document.documentElement.requestFullscreen?.().catch(() => {}); };
-
-  useEffect(() => {
-    const key = (e) => {
-      const t = e.target;
-      if (t.isContentEditable || t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT") return;
-      if (present) {
-        if (["ArrowRight", " ", "PageDown"].includes(e.key)) go(1);
-        if (["ArrowLeft", "PageUp"].includes(e.key)) go(-1);
-        if (e.key === "Escape") { setPresent(false); document.fullscreenElement && document.exitFullscreen?.(); }
-        return;
-      }
-      if (e.key === "F5") { e.preventDefault(); startPresent(); }
-      if (sel) {
-        const st = e.shiftKey ? 10 : 1;
-        if (e.key === "Delete" || e.key === "Backspace") delEl();
-        if (e.key === "ArrowLeft") change(sel, { x: el.x - st });
-        if (e.key === "ArrowRight") change(sel, { x: el.x + st });
-        if (e.key === "ArrowUp") change(sel, { y: el.y - st });
-        if (e.key === "ArrowDown") change(sel, { y: el.y + st });
-        if (e.key.startsWith("Arrow")) e.preventDefault();
-      } else {
-        if (e.key === "ArrowRight") go(1);
-        if (e.key === "ArrowLeft") go(-1);
-      }
-    };
-    window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-  });
-
-  const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Nunito+Sans:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700&family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@400;700&family=Space+Grotesk:wght@400;700&family=Caveat:wght@600&display=swap');
-    @keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}} @keyframes grow{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}} @keyframes float{50%{transform:translateY(-12px)}} @keyframes kb{from{transform:scale(1)}to{transform:scale(1.1)}} @keyframes fade{from{opacity:0}to{opacity:1}} @keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}} @keyframes draw{from{stroke-dashoffset:1200}to{stroke-dashoffset:0}} @keyframes drift{to{transform:translate(28px,20px)}} @keyframes bubble{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-480px);opacity:0}} @keyframes wave{to{transform:translateX(-90px)}} @keyframes wave2{from{transform:translateX(-90px)}to{transform:translateX(0)}} @keyframes glow{50%{box-shadow:0 0 22px 4px rgba(25,210,107,.75)}} @keyframes reveal{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0)}} @keyframes revealL{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
-    @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
-  `;
-
-  const B = ({ children, onClick, on, primary, title }) => (
-    <button title={title} onMouseDown={(e) => e.preventDefault()} onClick={onClick}
-      className="h-8 px-3 rounded-full text-sm font-semibold whitespace-nowrap transition active:scale-95"
-      style={{ background: primary ? UI : on ? "#E3EBFF" : "#fff", color: primary ? "#fff" : on ? UI : "#1B2437", border: `1px solid ${primary ? UI : "#D8DEEB"}` }}>
-      {children}
-    </button>
-  );
-  const act = (fn) => () => { fn(); setPanel(null); };
-  const It = ({ children, onClick, danger }) => (
-    <button onMouseDown={(e) => e.preventDefault()} onClick={onClick} className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold hover:bg-[#EEF3FF]" style={{ color: danger ? "#C62828" : "#1B2437" }}>{children}</button>
-  );
-  const dd = (id, label, body, w = 230) => (
-    <div className="relative">
-      <B on={panel === id} onClick={() => setPanel(panel === id ? null : id)}>{label} ▾</B>
-      {panel === id && (
-        <div className="absolute right-0 z-30 mt-2 rounded-2xl bg-white p-2 shadow-2xl" style={{ width: w, border: "1px solid #D8DEEB", animation: "pop .18s ease-out both" }}>{body}</div>
-      )}
-    </div>
-  );
-  const round = "h-8 rounded-full px-3 text-sm bg-white";
-  const bd = { border: "1px solid #D8DEEB" };
-
-  const formatBody = !el ? (
-    <p className="px-3 py-2 text-sm" style={{ color: "#5B667D" }}>Click a text, image or line on the slide first.</p>
-  ) : (
-    <div className="p-1 space-y-2">
-      {el.type === "text" && (<>
-        <select className={round + " w-full"} style={bd} value={el.font} onChange={(e) => change(sel, { font: e.target.value })}>
-          {FONTS.map((f) => <option key={f}>{f}</option>)}
-        </select>
-        <div className="flex items-center gap-1">
-          <B onClick={() => change(sel, { size: Math.max(8, el.size - 2) })}>A−</B>
-          <input type="number" className={round + " w-14 text-center"} style={bd} value={el.size} onChange={(e) => change(sel, { size: +e.target.value || 8 })} />
-          <B onClick={() => change(sel, { size: el.size + 2 })}>A+</B>
-          <input type="color" title="Text colour" className="h-8 w-9 rounded-full cursor-pointer" value={el.color} onChange={(e) => change(sel, { color: e.target.value })} />
-        </div>
-        <div className="flex gap-1 flex-wrap">
-          <B on={el.weight >= 700} onClick={() => change(sel, { weight: el.weight >= 700 ? 400 : 800 })}><b>B</b></B>
-          <B on={el.italic} onClick={() => change(sel, { italic: !el.italic })}><i>I</i></B>
-          {["left", "center", "right"].map((a) => <B key={a} on={el.align === a} onClick={() => change(sel, { align: a })}>{a === "left" ? "⇤" : a === "center" ? "↔" : "⇥"}</B>)}
-        </div>
-      </>)}
-      {el.type === "image" && (<>
-        <div className="flex gap-1 flex-wrap">
-          <B onClick={act(() => pickFile("replace"))}>Replace</B>
-          <B on={el.fit === "contain"} onClick={() => change(sel, { fit: el.fit === "cover" ? "contain" : "cover" })}>{el.fit === "cover" ? "Fit" : "Fill"}</B>
-          <B on={el.circle} onClick={() => change(sel, { circle: !el.circle })}>Circle</B>
-        </div>
-        <label className="flex items-center gap-2 text-xs px-1" style={{ color: "#5B667D" }}>Corners
-          <input type="range" min="0" max="240" className="flex-1" value={el.radius ?? 14} onChange={(e) => change(sel, { radius: +e.target.value, circle: false })} />
-        </label>
-        <div className="flex gap-1">
-          <B onClick={() => change(sel, { w: Math.round(el.w * 1.1), h: Math.round(el.h * 1.1) })}>Bigger</B>
-          <B onClick={() => change(sel, { w: Math.round(el.w / 1.1), h: Math.round(el.h / 1.1) })}>Smaller</B>
-        </div>
-      </>)}
-      {el.type === "shape" && <input type="color" title="Colour" className="h-8 w-12 rounded-full cursor-pointer" value={el.color} onChange={(e) => change(sel, { color: e.target.value })} />}
-      <div className="flex gap-1 flex-wrap">
-        <B onClick={() => change(sel, { x: Math.round((1280 - el.w) / 2) })}>Center</B>
-        <B onClick={() => order(1)}>Front</B>
-        <B onClick={() => order(-1)}>Back</B>
-      </div>
-      <It danger onClick={act(delEl)}>Delete</It>
-    </div>
-  );
-
-  const bgBody = (
-    <div className="p-1 space-y-3">
-      <div className="flex items-center gap-2"><span className="text-sm w-14">Colour</span><input type="color" className="h-8 w-12 rounded-full cursor-pointer" value={s.bg.color} onChange={(e) => setBg({ color: e.target.value })} /></div>
-      <div className="flex gap-1 flex-wrap">
-        <B on={s.bg.curves !== false} onClick={() => setBg({ curves: s.bg.curves === false })}>Curves</B>
-        <B onClick={act(() => pickFile("bg"))}>Upload image</B>
-        <B onClick={() => setBg({ img: "" })}>No image</B>
-      </div>
-      {s.bg.full && <label className="flex items-center gap-2 text-xs" style={{ color: "#5B667D" }}>Tint<input type="range" min="0" max="1" step="0.05" className="flex-1" value={s.bg.dim} onChange={(e) => setBg({ dim: +e.target.value })} /></label>}
-      <div className="grid grid-cols-4 gap-2">
-        {PICS.map((p) => <img key={p} src={p} alt="" onClick={() => setBg({ img: p })} className="h-10 w-full object-cover rounded-lg cursor-pointer" style={bd} />)}
-      </div>
-    </div>
-  );
-
-  const shareBody = (
-    <div className="p-2">
-      <p className="text-sm mb-2" style={{ color: "#5B667D" }}>Anyone with the link can open it and edit their own copy.</p>
-      <B primary onClick={copy}>{copied ? "Link copied" : "Copy link for everyone"}</B>
-      <p className="text-sm font-semibold mt-3 mb-1">Send to a teammate</p>
-      <input type="email" placeholder="name@email.com" className={round + " w-full mb-2"} style={bd} value={email} onChange={(e) => setEmail(e.target.value)} />
-      <B onClick={sendMail}>Send by email</B>
-      <p className="text-xs mt-3" style={{ color: "#5B667D" }}>Images uploaded from your device are not included in links.</p>
-    </div>
-  );
-
-  if (present) return (
-    <div className="fixed inset-0 z-50 bg-black">
-      <style>{css}</style>
-      <Stage className="w-full h-full"><div key={s.id} style={{ animation: "fade .5s both" }}><SlideView slide={s} animate /></div></Stage>
-      <div className="absolute top-0 left-0 h-1 transition-all duration-500" style={{ width: `${((cur + 1) / slides.length) * 100}%`, background: GREEN }} />
-      <button aria-label="Previous slide" className="absolute left-0 top-0 h-full w-1/5 opacity-0" onClick={() => go(-1)} />
-      <button aria-label="Next slide" className="absolute right-0 top-0 h-full w-1/5 opacity-0" onClick={() => go(1)} />
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 items-center opacity-0 hover:opacity-100 transition">
-        <B onClick={() => go(-1)}>‹</B><span className="text-white text-sm px-2">{cur + 1} / {slides.length}</span><B onClick={() => go(1)}>›</B>
-        <B primary onClick={() => { setPresent(false); document.fullscreenElement && document.exitFullscreen?.(); }}>Exit</B>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="h-screen flex flex-col" style={{ background: "#FFFFFF", color: "#1B2437", fontFamily: "'Nunito Sans', sans-serif" }}>
-      <style>{css}</style>
-      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFile} />
-      {panel && <div className="fixed inset-0 z-20" onMouseDown={() => setPanel(null)} />}
-
-      <header className="h-11 px-3 flex items-center gap-2 shrink-0" style={{ borderBottom: "1px solid #E1E5EE" }}>
-        <span className="font-bold text-sm truncate" style={{ fontFamily: "Outfit", maxWidth: 260 }}>Globalization and Global Citizenship</span>
-        <div className="flex-1" />
-        {dd("insert", "Insert", <>
-          <It onClick={act(() => addEl(txt("New text", 400, 300, 400, { size: 36 })))}>Text</It>
-          <It onClick={act(() => pickFile("add"))}>Image</It>
-          <It onClick={act(() => addEl(box(500, 340, 240, 10, GREEN)))}>Line</It>
-        </>, 170)}
-        {dd("slide", "Slide", <>
-          <It onClick={act(addSlide)}>New slide</It>
-          <It onClick={act(dupSlide)}>Duplicate</It>
-          <It onClick={act(() => moveSlide(-1))}>Move up</It>
-          <It onClick={act(() => moveSlide(1))}>Move down</It>
-          <It danger onClick={act(delSlide)}>Delete slide</It>
-        </>, 180)}
-        {dd("format", "Format", formatBody, 290)}
-        {dd("bg", "Background", bgBody, 290)}
-        {dd("share", "Share", shareBody, 300)}
-        <B primary onClick={startPresent} title="F5">▶ Present</B>
-      </header>
-
-      <div className="flex-1 flex min-h-0">
-        <aside className="w-44 shrink-0 overflow-y-auto p-3 space-y-3" style={{ borderRight: "1px solid #E1E5EE" }}>
-          {slides.map((x, i) => (
-            <div key={x.id} onClick={() => { setCur(i); setSel(null); }} className="flex gap-2 items-start cursor-pointer">
-              <span className="text-xs pt-1 w-4" style={{ color: "#5B667D" }}>{i + 1}</span>
-              <div className="rounded-lg overflow-hidden" style={{ width: 128, height: 72, outline: i === cur ? `3px solid ${UI}` : "1px solid #D8DEEB" }}>
-                <div style={{ width: 1280, height: 720, transform: "scale(.1)", transformOrigin: "top left", pointerEvents: "none" }}>
-                  <SlideView slide={x} />
-                </div>
-              </div>
-            </div>
-          ))}
-        </aside>
-        <main className="flex-1 min-w-0 flex flex-col">
-          <Stage className="flex-1 p-5">
-            <SlideView slide={s} live sel={sel} onSel={setSel} onChange={change} />
-          </Stage>
-          <div className="h-9 flex items-center justify-center gap-3 text-sm shrink-0">
-            <B onClick={() => go(-1)}>‹</B><span>Slide {cur + 1} of {slides.length}</span><B onClick={() => go(1)}>›</B>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+  const [started, setStarted] = useState(false);
+  return started
+    ? <Slides onExit={() => setStarted(false)} />
+    : <Intro onStart={() => setStarted(true)} />;
 }
