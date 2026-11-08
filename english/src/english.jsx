@@ -9,7 +9,7 @@ import g from "./assets/g.jpg";
 import h from "./assets/h.jpg";
 import tea from "./assets/tea.jpg";
 import image2 from "./assets/image2.jpg";
-import keza from "./assets/keza.jpg";
+import keza from "./assets/keza.webp";
 import erneste from "./assets/erneste.jpg";
 
 /* Images live in  src/assets/  (a.jpg ... h.jpg, tea.jpg, image2.jpg, keza.jpg, erneste.jpg) and are imported above */
